@@ -3,10 +3,10 @@ Description=Toloka search bot for Telegram
 After=network.target
 
 [Service]
-User=telegrambot
-WorkingDirectory=/home/telegrambot/toloka
-ExecStart=/home/telegrambot/toloka/venv/bin/python main.py
-Environment=token=123456789:ABCDEFGabcdefg123456789
+User=nailer_elgoat
+WorkingDirectory=/home/nailer_elgoat/toloka
+ExecStart=/home/nailer_elgoat/toloka/venv/bin/python main.py
+Environment=token=648415868:AAE7w9u6WyxFLkwi4SvE-Ju4WDGQ4uOMiCg
 Restart=always
 
 [Install]
