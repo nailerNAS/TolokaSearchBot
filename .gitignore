@@ -105,6 +105,3 @@ venv.bak/
 
 # PyCharm
 .idea/
-
-# Service files
-*.service
