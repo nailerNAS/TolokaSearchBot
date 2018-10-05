@@ -38,7 +38,7 @@ def stringify_toloka_search_result(result: Toloka.TolokaSearchResult) -> str:
 async def send_welcome(m: types.Message):
     await m.reply('Hello! I can search Toloka.to and show you results with links'
                   '\nExample search:'
-                  '\n`/search Batman`',
+                  '\n`/search Interstellar`',
                   parse_mode=types.ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
@@ -61,7 +61,7 @@ async def search_toloka(m: types.Message):
 
 @dp.inline_handler(func=lambda query: bool(query.query))
 async def inline_search_toloka(q: types.InlineQuery):
-    results = await Toloka.search(q.query)
+    results = await Toloka.search(q.query, limit=50)
 
     if results:
         inline_results = []
