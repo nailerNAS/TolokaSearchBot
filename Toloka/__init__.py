@@ -8,7 +8,7 @@ from .TolokaSearchResult import TolokaSearchResult
 API_URL = r'https://toloka.to/api.php?'
 
 
-async def search(query: str) -> typing.List[TolokaSearchResult]:
+async def search(query: str, limit: int = None) -> typing.List[TolokaSearchResult]:
     _query = encode_query(query)
     results = []
 
@@ -16,9 +16,12 @@ async def search(query: str) -> typing.List[TolokaSearchResult]:
         async with s.get(API_URL + _query) as resp:
             d = await resp.json()
 
-            for json_result in d:
+            for n, json_result in enumerate(d):
                 toloka_result = TolokaSearchResult.from_json(json_result)
                 results.append(toloka_result)
+
+                if limit and len(results) >= limit:
+                    break
 
     return results
 
