@@ -1,21 +1,15 @@
 import asyncio
-import os
 import re
 
-from aiogram import Bot, types
-from aiogram.dispatcher import Dispatcher
+from aiogram import Bot, types, Dispatcher
 from aiogram.utils import executor
 
 import Toloka
-
-TOKEN = os.environ.get('token')
-
-if not TOKEN:
-    raise AttributeError('Please declare the token environment variable or modify this code')
+import config
 
 loop = asyncio.get_event_loop()
 
-bot = Bot(TOKEN, loop=loop)
+bot = Bot(config.TOKEN, loop=loop)
 dp = Dispatcher(bot, loop=loop)
 
 search_regexp = re.compile(r'/search\s(\w+)', flags=re.IGNORECASE)
@@ -59,13 +53,12 @@ async def search_toloka(m: types.Message):
         await m.reply(f'No results for {query}')
 
 
-@dp.inline_handler(func=lambda query: bool(query.query))
+@dp.inline_handler(lambda query: query.query)
 async def inline_search_toloka(q: types.InlineQuery):
     results = await Toloka.search(q.query, limit=50)
+    inline_results = []
 
     if results:
-        inline_results = []
-
         for n, result in enumerate(results):
             result: Toloka.TolokaSearchResult
 
@@ -78,10 +71,18 @@ async def inline_search_toloka(q: types.InlineQuery):
             if n >= 50:
                 break
 
-        try:
-            await bot.answer_inline_query(q.id, inline_results, cache_time=300, is_personal=False)
-        except:
-            pass
+    else:
+        input_content = types.InputTextMessageContent(f'Nothing found for {q.query}')
+        inline_result = types.InlineQueryResultArticle(id='1',
+                                                       title='Nothing found',
+                                                       input_message_content=input_content,
+                                                       description=f'Nothing found for {q.query}')
+        inline_results.append(inline_result)
+
+    try:
+        await bot.answer_inline_query(q.id, inline_results)
+    except:
+        pass
 
 
 if __name__ == '__main__':

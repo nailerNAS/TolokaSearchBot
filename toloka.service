@@ -6,7 +6,6 @@ After=network.target
 User=telegrambot
 WorkingDirectory=/home/telegrambot/toloka
 ExecStart=/home/telegrambot/toloka/venv/bin/python main.py
-Environment=token=123456789:ABCDEFGabcdefg123456789
 Restart=always
 
 [Install]
