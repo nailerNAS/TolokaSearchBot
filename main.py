@@ -2,7 +2,8 @@ import asyncio
 import re
 
 from aiogram import Bot, types, Dispatcher
-from aiogram.utils import executor
+from aiogram.dispatcher.webhook import get_new_configured_app
+from aiohttp.web import run_app
 
 import Toloka
 import config
@@ -85,5 +86,15 @@ async def inline_search_toloka(q: types.InlineQuery):
         pass
 
 
+async def on_startup(*args, **kwargs):
+    await bot.delete_webhook()
+    await bot.set_webhook(config.WEBHOOK_URL)
+
+
+async def on_shutdown(*args, **kwargs):
+    await bot.delete_webhook()
+
+
 if __name__ == '__main__':
-    executor.start_polling(dp, loop=loop, skip_updates=True, reset_webhook=True)
+    app = get_new_configured_app(dp, config.WEBHOOK_URL_PATH)
+    run_app(app)
