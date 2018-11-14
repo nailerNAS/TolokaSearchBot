@@ -97,4 +97,4 @@ async def on_shutdown(*args, **kwargs):
 
 if __name__ == '__main__':
     app = get_new_configured_app(dp, config.WEBHOOK_URL_PATH)
-    run_app(app)
+    run_app(app, port=config.WEBAPP_PORT)
